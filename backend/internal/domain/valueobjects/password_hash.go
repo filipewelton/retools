@@ -25,3 +25,9 @@ func (p *PasswordHash) GetValue() string {
 func (p *PasswordHash) Assign(value string) {
 	p.value = value
 }
+
+func (p *PasswordHash) Validate(plainText string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(p.value), []byte(plainText))
+
+	return err == nil
+}

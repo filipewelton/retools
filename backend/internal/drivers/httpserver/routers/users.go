@@ -6,6 +6,7 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-func SetUsersRoute(r chi.Router) {
+func SetUsersRouter(r chi.Router) {
 	r.Post("/", handlers.HandleUserCreation)
+	r.Post("/session", handlers.HandleSessionCreation)
 }

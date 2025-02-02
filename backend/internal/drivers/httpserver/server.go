@@ -11,7 +11,6 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 	"github.com/go-chi/httprate"
-	"github.com/go-chi/jwtauth"
 )
 
 func Setup() chi.Router {
@@ -25,8 +24,6 @@ func Setup() chi.Router {
 		MaxAge:           300,
 	})
 
-	tokenSettings := jwtauth.New("HS256", config.Env.JWT_SECRET, nil)
-
 	// Middlewares
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
@@ -37,11 +34,10 @@ func Setup() chi.Router {
 	r.Use(cors)
 	r.Use(middleware.StripSlashes)
 	r.Use(middlewares.LimitRequestBodySize)
-	r.Use(jwtauth.Verifier(tokenSettings))
-	r.Use(jwtauth.Authenticator)
+	r.Use(middlewares.AuthenticateAPICredential)
 
 	// Routers
-	r.Route("/users", routers.SetUsersRoute)
+	r.Route("/users", routers.SetUsersRouter)
 
 	return r
 }

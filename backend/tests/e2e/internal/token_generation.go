@@ -1,19 +1,20 @@
 package internal
 
 import (
-	"backend/config"
+	"backend/internal/application/helpers"
+	"time"
 
-	"github.com/go-chi/jwtauth"
+	"github.com/golang-jwt/jwt/v5"
 )
 
-func GenerateToken() string {
-	tokenSettings := jwtauth.New("HS256", config.Env.JWT_SECRET, nil)
+func GenerateAPICredential() string {
+	token := helpers.GenerateJWT(jwt.MapClaims{
+		"exp": time.Now().Add(time.Hour).Unix(),
+	})
 
-	_, tokenString, err := tokenSettings.Encode(map[string]interface{}{})
-
-	if err != nil {
-		panic(err)
+	if token.IsLeft {
+		panic(token.LeftResponse)
 	}
 
-	return tokenString
+	return token.RightResponse
 }

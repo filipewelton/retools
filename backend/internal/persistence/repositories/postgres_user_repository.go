@@ -56,7 +56,7 @@ func (PostgresUserRepository) FindByEmail(
 
 	defer postgres.Disconnect()
 
-	db := postgres.DB.First(model, "email=?", email)
+	db := postgres.DB.First(&model, "email=?", email)
 
 	if errors.Is(db.Error, gorm.ErrRecordNotFound) {
 		err := typings.Error{
